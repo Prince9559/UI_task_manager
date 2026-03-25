@@ -9,28 +9,40 @@
 <h2>Update Task</h2>
 
 <label>Task ID:</label>
-<input type="number" id="task_id" placeholder="Enter ID"><br><br>
+<input type="number" id="task_id"><br><br>
 
 <label>Task Name:</label>
-<input type="text" id="task_name" placeholder="Enter task name"><br><br>
+<input type="text" id="task_name"><br><br>
 
 <label>Status:</label>
-<input type="text" id="status" list="t1" placeholder="Enter status"><br><br>
-  <datalist id="t1">
-      <option value="Pending"></option>
-      <option value="In Progress"></option>
-      <option value="On Hold"></option>
-      <option value="Completed"></option>
-      <option value="Cancelled"></option>
-    </datalist>
+<input type="text" id="status" list="t1"><br><br>
+
+<datalist id="t1">
+  <option value="Pending"></option>
+  <option value="In Progress"></option>
+  <option value="On Hold"></option>
+  <option value="Completed"></option>
+  <option value="Cancelled"></option>
+</datalist>
 
 <button onclick="updateTask()">Update Task</button>
 
 <p id="response"></p>
 
 <script>
-    
-function updateTask() {
+  // 🔥 Auto-fill
+  let params = new URLSearchParams(window.location.search);
+
+  let id = params.get("id");
+  let task_name = params.get("task_name");
+  let status = params.get("status");
+
+  document.getElementById("task_id").value = id;
+  document.getElementById("task_name").value = task_name;
+  document.getElementById("status").value = status;
+
+  // 🔥 Update API
+  function updateTask() {
     let id = document.getElementById('task_id').value;
     let task_name = document.getElementById('task_name').value;
     let status = document.getElementById('status').value;
@@ -49,10 +61,9 @@ function updateTask() {
     .then(res => res.json())
     .then(data => {
         document.getElementById('response').innerText = data.message;
-        console.log(data);
     })
     .catch(err => console.log(err));
-}
+  }
 </script>
 
 </body>

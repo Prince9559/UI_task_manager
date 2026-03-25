@@ -25,6 +25,7 @@
       <option value="Completed"></option>
       <option value="Cancelled"></option>
     </datalist>
+
     <br /><br />
 
     <button onclick="submitTask()">Submit</button>
@@ -59,13 +60,10 @@
         })
           .then((response) => response.json())
           .then((data) => {
-            console.log(data);
             alert("Task created successfully!");
             loadTasks();
           })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
+          .catch((error) => console.error(error));
       }
 
       function loadTasks() {
@@ -76,17 +74,22 @@
             tableBody.innerHTML = "";
 
             data.forEach((task) => {
-            let row = `
-                <tr>
+              let row = `
+              <tr>
                 <td>${task.id}</td>
                 <td>${task.task_name}</td>
                 <td>${task.status}</td>
                 <td>
-                <button>Update</button>
-                <button>Delete</button>
+                  <a href="https://prince9559.github.io/UI_task_manager/update.html?id=${task.id}&task_name=${encodeURIComponent(task.task_name)}&status=${encodeURIComponent(task.status)}">
+                    <button>Update</button>
+                  </a>
+
+                  <a href="https://prince9559.github.io/UI_task_manager/delete.html?id=${task.id}">
+                    <button>Delete</button>
+                  </a>
                 </td>
-                </tr>
-                `;
+              </tr>
+              `;
               tableBody.innerHTML += row;
             });
           })

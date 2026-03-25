@@ -9,13 +9,20 @@
 <h2>Delete Task</h2>
 
 <label>Task ID:</label>
-<input type="number" id="task_id" placeholder="Enter ID"><br><br>
+<input type="number" id="task_id"><br><br>
+
 <button onclick="deleteTask()">Delete Task</button>
 
 <p id="response"></p>
 
 <script>
-function deleteTask() {
+  let params = new URLSearchParams(window.location.search);
+  let id = params.get("id");
+
+  document.getElementById("task_id").value = id;
+
+   
+  function deleteTask() {
     let id = document.getElementById('task_id').value;
 
     fetch(`http://127.0.0.1:8000/api/tasks/${id}`, {
@@ -27,10 +34,10 @@ function deleteTask() {
     .then(res => res.json())
     .then(data => {
         document.getElementById('response').innerText = data.message;
-        console.log(data);
     })
     .catch(err => console.log(err));
-}
+  }
+  
 </script>
 
 </body>
