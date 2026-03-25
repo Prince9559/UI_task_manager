@@ -21,8 +21,12 @@
 
   document.getElementById("task_id").value = id;
 
-   
   function deleteTask() {
+
+    if (!confirm("Aap delete karna chahte hain?")) {
+        return;
+    }
+
     let id = document.getElementById('task_id').value;
 
     fetch(`http://127.0.0.1:8000/api/tasks/${id}`, {
@@ -37,7 +41,6 @@
     })
     .catch(err => console.log(err));
   }
-  
 </script>
 
 </body>
