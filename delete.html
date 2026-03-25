@@ -98,16 +98,17 @@
 
 <div class="form-container">
     <div class="form-group">
-        <label>Task ID:</label>
-        <input type="number" id="task_id" readonly>
+    <label>Task ID:</label>
+    <input type="number" id="task_id" readonly>
     </div>
 
     <button onclick="deleteTask()">Delete Task</button>
-
     <p id="response"></p>
+
 </div>
 
 <script>
+    
     let params = new URLSearchParams(window.location.search);
     let id = params.get("id");
 
