@@ -1,0 +1,112 @@
+## ⚙️ How to Run the Project Locally
+
+Follow the steps below to run the project on your system:
+
+---
+
+### 🔹 1. Clone the Repository
+
+```bash
+frontend
+git clone :https://github.com/Prince9559/UI_task_manager
+
+
+Backend
+git clone :https://github.com/Prince9559/task-manager
+cd task-manager
+```
+
+---
+
+### 🔹 2. Install Backend Dependencies (Laravel)
+
+Make sure you have PHP, Composer, and PostgreSQL installed.
+
+```bash
+composer install
+```
+
+---
+
+### 🔹 3. Setup Environment File
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+Now open `.env` file and update database configuration:
+
+```env
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=task_manager
+DB_USERNAME=postgres
+DB_PASSWORD=your_password
+```
+
+---
+
+### 🔹 4. Setup Database
+
+#### Option 1: Using Migration
+
+```bash
+php artisan migrate
+```
+
+#### Option 2: Using SQL File
+
+```bash
+psql -U postgres -d task_manager -f task_manager.sql
+```
+
+---
+
+### 🔹 5. Run Laravel Server
+
+```bash
+php artisan serve
+```
+
+Server will start at:
+👉 http://127.0.0.1:8000
+
+---
+
+### 🔹 6. Run Frontend
+
+* Open your HTML file (e.g., `index.html`) in browser
+  OR
+* Use Live Server (VS Code extension)
+
+---
+
+### 🔹 7. API Base URL
+
+Make sure your frontend is calling:
+
+```
+http://127.0.0.1:8000/api/tasks
+```
+
+---
+
+### 🔹 8. Features to Test
+
+* Add new task ✅
+* View task list ✅
+* Change task status ✅
+* Real-time update (auto refresh) ✅
+
+---
+
+## ✅ Requirements
+
+* PHP >= 8.x
+* Composer
+* PostgreSQL
+* Node.js (optional for frontend tools)
+
+---
