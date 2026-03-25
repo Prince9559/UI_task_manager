@@ -3,75 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <title>Update Task</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f8;
+            padding: 30px;
+            color: #333;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #2c3e50;
+        }
+
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, select:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #27ae60; /* green */
+            color: white;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        #response {
+            margin-top: 20px;
+            font-weight: 600;
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                width: 95%;
+            }
+            input, select, button {
+                font-size: 14px;
+                padding: 8px 10px;
+            }
+        }
+    </style>
 </head>
 <body>
 
 <h2>Update Task</h2>
 
-<label>Task ID:</label>
-<input type="number" id="task_id"><br><br>
+<div class="form-container">
+    <div class="form-group">
+        <label>Task ID:</label>
+        <input type="number" id="task_id" readonly>
+    </div>
 
-<label>Task Name:</label>
-<input type="text" id="task_name"><br><br>
+    <div class="form-group">
+        <label>Task Name:</label>
+        <input type="text" id="task_name">
+    </div>
 
-<label>Status</label>
-<select id="status">
-  <option value="" disabled>Select Status</option>
-  <option value="Pending">Pending</option>
-  <option value="In Progress">In Progress</option>
-  <option value="On Hold">On Hold</option>
-  <option value="Completed">Completed</option>
-  <option value="Cancelled">Cancelled</option>
-</select>
+    <div class="form-group">
+        <label>Status:</label>
+        <select id="status">
+            <option value="" disabled>Select Status</option>
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="On Hold">On Hold</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+        </select>
+    </div>
 
-<br><br>
-
-<button onclick="updateTask()">Update Task</button>
-
-<p id="response"></p>
+    <button onclick="updateTask()">Update Task</button>
+    <p id="response"></p>
+</div>
 
 <script>
-   
-  let params = new URLSearchParams(window.location.search);
+    let params = new URLSearchParams(window.location.search);
+    let id = params.get("id");
+    let task_name = decodeURIComponent(params.get("task_name"));
+    let status = decodeURIComponent(params.get("status"));
 
-  let id = params.get("id");
-  let task_name = decodeURIComponent(params.get("task_name"));
-  let status = decodeURIComponent(params.get("status"));
+    document.getElementById("task_id").value = id;
+    document.getElementById("task_name").value = task_name;
 
-   
-  document.getElementById("task_id").value = id;
-  document.getElementById("task_name").value = task_name;
+    // Select correct status
+    let option = document.querySelector(`#status option[value="${status}"]`);
+    if (option) option.selected = true;
 
-   
-  document.getElementById("status").value = status;
+    function updateTask() {
+        let id = document.getElementById('task_id').value;
+        let task_name = document.getElementById('task_name').value;
+        let status = document.getElementById('status').value;
 
-   
-  let option = document.querySelector(`#status option[value="${status}"]`);
-  if (option) option.selected = true;
+        if(task_name === "" || status === "") {
+            alert("Please enter task name and select status!");
+            return;
+        }
 
-   
-  function updateTask() {
-    let id = document.getElementById('task_id').value;
-    let task_name = document.getElementById('task_name').value;
-    let status = document.getElementById('status').value;
-
-    fetch(`http://127.0.0.1:8000/api/tasks/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-            task_name: task_name,
-            status: status
+        fetch(`http://127.0.0.1:8000/api/tasks/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                task_name: task_name,
+                status: status
+            })
         })
-    })
-    .then(res => res.json())
-    .then(data => {
-        document.getElementById('response').innerText = data.message;
-    })
-    .catch(err => console.log(err));
-  }
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('response').innerText = data.message;
+        })
+        .catch(err => console.log(err));
+    }
 </script>
 
 </body>

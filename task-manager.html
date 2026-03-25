@@ -4,36 +4,158 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Task Manager</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: #f4f6f8;
+        color: #333;
+        padding: 30px;
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #2c3e50;
+      }
+
+      .form-container {
+        background-color: #fff;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        max-width: 600px;
+        margin: 0 auto 30px auto;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+      }
+
+      input[type="text"], select {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        transition: 0.2s;
+      }
+
+      input[type="text"]:focus, select:focus {
+        border-color: #3498db;
+        outline: none;
+        box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+      }
+
+      button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      button:hover {
+        opacity: 0.9;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      }
+
+      th, td {
+        padding: 12px 15px;
+        text-align: center;
+      }
+
+      th {
+        background-color: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      .btn-update {
+        background-color: #27ae60; 
+        color: white;
+        margin: 0 3px;
+        padding: 6px 12px;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+
+      .btn-delete {
+        background-color: #e74c3c; 
+        color: white;
+        margin: 0 3px;
+        padding: 6px 12px;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+
+      @media (max-width: 600px) {
+        .form-container, table {
+          width: 95%;
+        }
+
+        th, td {
+          font-size: 14px;
+          padding: 8px 10px;
+        }
+
+        button {
+          font-size: 14px;
+          padding: 8px 12px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <label>
-      Task
-      <input id="task_name" type="text" placeholder="Enter task name.." />
-    </label>
 
-    <br /><br />
+    <h2>Task Manager</h2>
 
-     <label>
-  Status
-  <select id="status">
-    <option aria-placeholder="select"></option>
-    <option value="Pending">Pending</option>
-    <option value="In Progress">In Progress</option>
-    <option value="On Hold">On Hold</option>
-    <option value="Completed">Completed</option>
-    <option value="Cancelled">Cancelled</option>
-  </select>
-</label>
+    <div class="form-container">
+      <div class="form-group">
+        <label for="task_name">Task Name</label>
+        <input id="task_name" type="text" placeholder="Enter task name.." />
+      </div>
 
-    <br /><br />
+      <div class="form-group">
+        <label for="status">Status</label>
+        <select id="status">
+          <option value="" disabled selected>Select Status</option>
+          <option value="Pending">Pending</option>
+          <option value="In Progress">In Progress</option>
+          <option value="On Hold">On Hold</option>
+          <option value="Completed">Completed</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+      </div>
 
-    <button onclick="submitTask()">Submit</button>
+      <button onclick="submitTask()">Submit Task</button>
+    </div>
 
-    <br /><br />
-
-    <h2>Task List</h2>
-
-    <table border="1" id="taskTable">
+    <table id="taskTable">
       <thead>
         <tr>
           <th>ID</th>
@@ -50,6 +172,11 @@
         let taskName = document.getElementById("task_name").value;
         let status = document.getElementById("status").value;
 
+        if(taskName === "" || status === "") {
+          alert("Please enter task name and select status!");
+          return;
+        }
+
         fetch("http://127.0.0.1:8000/api/tasks", {
           method: "POST",
           headers: {
@@ -57,45 +184,47 @@
           },
           body: JSON.stringify({ task_name: taskName, status: status }),
         })
-          .then((response) => response.json())
-          .then((data) => {
-            alert("Task created successfully!");
-            loadTasks();
-          })
-          .catch((error) => console.error(error));
+        .then((response) => response.json())
+        .then((data) => {
+          alert("Task created successfully!");
+          loadTasks();
+          document.getElementById("task_name").value = "";
+          document.getElementById("status").selectedIndex = 0;
+        })
+        .catch((error) => console.error(error));
       }
 
       function loadTasks() {
         fetch("http://127.0.0.1:8000/api/tasks")
-          .then((response) => response.json())
-          .then((data) => {
-            let tableBody = document.querySelector("#taskTable tbody");
-            tableBody.innerHTML = "";
+        .then((response) => response.json())
+        .then((data) => {
+          let tableBody = document.querySelector("#taskTable tbody");
+          tableBody.innerHTML = "";
 
-            data.forEach((task) => {
-              let row = `
+          data.forEach((task) => {
+            let row = `
               <tr>
                 <td>${task.id}</td>
                 <td>${task.task_name}</td>
                 <td>${task.status}</td>
                 <td>
                   <a href="https://prince9559.github.io/UI_task_manager/update.html?id=${task.id}&task_name=${encodeURIComponent(task.task_name)}&status=${encodeURIComponent(task.status)}">
-                    <button>Update</button>
+                    <button class="btn-update">Update</button>
                   </a>
-
                   <a href="https://prince9559.github.io/UI_task_manager/delete.html?id=${task.id}">
-                    <button>Delete</button>
+                    <button class="btn-delete">Delete</button>
                   </a>
                 </td>
               </tr>
-              `;
-              tableBody.innerHTML += row;
-            });
-          })
-          .catch((error) => console.error(error));
+            `;
+            tableBody.innerHTML += row;
+          });
+        })
+        .catch((error) => console.error(error));
       }
 
       loadTasks();
     </script>
+
   </body>
 </html>
