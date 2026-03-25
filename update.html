@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Task</title>
+</head>
+<body>
+
+<h2>Update Task</h2>
+
+<label>Task ID:</label>
+<input type="number" id="task_id" placeholder="Enter ID"><br><br>
+
+<label>Task Name:</label>
+<input type="text" id="task_name" placeholder="Enter task name"><br><br>
+
+<label>Status:</label>
+<input type="text" id="status" list="t1" placeholder="Enter status"><br><br>
+  <datalist id="t1">
+      <option value="Pending"></option>
+      <option value="In Progress"></option>
+      <option value="On Hold"></option>
+      <option value="Completed"></option>
+      <option value="Cancelled"></option>
+    </datalist>
+
+<button onclick="updateTask()">Update Task</button>
+
+<p id="response"></p>
+
+<script>
+    
+function updateTask() {
+    let id = document.getElementById('task_id').value;
+    let task_name = document.getElementById('task_name').value;
+    let status = document.getElementById('status').value;
+
+    fetch(`http://127.0.0.1:8000/api/tasks/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            task_name: task_name,
+            status: status
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('response').innerText = data.message;
+        console.log(data);
+    })
+    .catch(err => console.log(err));
+}
+</script>
+
+</body>
+</html>
