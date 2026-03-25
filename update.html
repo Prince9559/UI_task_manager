@@ -14,16 +14,19 @@
 <label>Task Name:</label>
 <input type="text" id="task_name"><br><br>
 
-<label>Status:</label>
-<input type="text" id="status" list="t1"><br><br>
+   <label>
+  Status
+  <select id="status">
+    <option aria-placeholder="select"></option>
+    <option value="Pending">Pending</option>
+    <option value="In Progress">In Progress</option>
+    <option value="On Hold">On Hold</option>
+    <option value="Completed">Completed</option>
+    <option value="Cancelled">Cancelled</option>
+  </select>
+</label>
 
-<datalist id="t1">
-  <option value="Pending"></option>
-  <option value="In Progress"></option>
-  <option value="On Hold"></option>
-  <option value="Completed"></option>
-  <option value="Cancelled"></option>
-</datalist>
+<br><br>
 
 <button onclick="updateTask()">Update Task</button>
 
