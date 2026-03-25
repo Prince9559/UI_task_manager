@@ -30,19 +30,21 @@
 <p id="response"></p>
 
 <script>
-  // 🔥 Auto-fill
+   
   let params = new URLSearchParams(window.location.search);
 
   let id = params.get("id");
-  let task_name = params.get("task_name");
-  let status = params.get("status");
+  let task_name = decodeURIComponent(params.get("task_name"));
+  let status = decodeURIComponent(params.get("status"));
 
+   
   document.getElementById("task_id").value = id;
   document.getElementById("task_name").value = task_name;
   document.getElementById("status").value = status;
 
-  // 🔥 Update API
-  function updateTask() {
+   
+  function updateTask() 
+  {
     let id = document.getElementById('task_id').value;
     let task_name = document.getElementById('task_name').value;
     let status = document.getElementById('status').value;
