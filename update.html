@@ -14,17 +14,15 @@
 <label>Task Name:</label>
 <input type="text" id="task_name"><br><br>
 
-   <label>
-  Status
-  <select id="status">
-    <option aria-placeholder="select"></option>
-    <option value="Pending">Pending</option>
-    <option value="In Progress">In Progress</option>
-    <option value="On Hold">On Hold</option>
-    <option value="Completed">Completed</option>
-    <option value="Cancelled">Cancelled</option>
-  </select>
-</label>
+<label>Status</label>
+<select id="status">
+  <option value="" disabled>Select Status</option>
+  <option value="Pending">Pending</option>
+  <option value="In Progress">In Progress</option>
+  <option value="On Hold">On Hold</option>
+  <option value="Completed">Completed</option>
+  <option value="Cancelled">Cancelled</option>
+</select>
 
 <br><br>
 
@@ -43,11 +41,16 @@
    
   document.getElementById("task_id").value = id;
   document.getElementById("task_name").value = task_name;
+
+   
   document.getElementById("status").value = status;
 
    
-  function updateTask() 
-  {
+  let option = document.querySelector(`#status option[value="${status}"]`);
+  if (option) option.selected = true;
+
+   
+  function updateTask() {
     let id = document.getElementById('task_id').value;
     let task_name = document.getElementById('task_name').value;
     let status = document.getElementById('status').value;
